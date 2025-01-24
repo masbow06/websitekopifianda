@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\OrderRequest;
-use Midtrans\Config;
-use Midtrans\Snap;
+use Midtrans\Notification;
+use Midtrans\CoreApi;
 use App\Models\Transaksi;
 use App\Models\Produk;
 use App\Models\Menu;
 use App\Services\MidtransService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -47,12 +49,29 @@ class OrderController extends Controller
         ]);
     }
 
-    private function createPayment(array $param) {
-        Config::$serverKey = env('MIDTRANS_SERVER_KEY');
-        Config::$isProduction = false;
-        Config::$isSanitized = true;
-        Config::$is3ds = true;
-        return Snap::getSnapToken($param);
+    public function notificationHandler(Request $request) {
+
+        $this->midtransService;
+
+        $notif = new Notification();
+        $orderId = $notif->order_id;
+        $transactionStatus = $notif->transaction_status;
+        $fraudStatus = $notif->fraud_status;
+
+        $transactions = Transaksi::where('trx_code', $orderId)->get();
+        if ($transactions->isEmpty()) {
+            return response(['message' => "Transaction $orderId not found"], 404);
+        }
+        Log::info(json_encode($notif));
+        Log::info(json_encode($transactions));
+
+
+        $status = $this->getTrxStatus($transactionStatus, $fraudStatus);
+        foreach ($transactions as $trx) {
+            $trx->paymentstat = $status;
+            $trx->save();
+        }
+        return response(['message' => 'Notification received'], 200);
     }
 
     private function createPaymentParam(OrderRequest $request) {
@@ -89,5 +108,26 @@ class OrderController extends Controller
             'item_details' => $products,
             'customer_details' => $customer_detail
         ];
+    }
+
+    private function getTrxStatus($transactionStatus, $fraudStatus) {
+        if ($transactionStatus == 'capture') {
+            if ($fraudStatus == 'challenge') {
+                return 'challenged';
+            } else {
+                return 'paid';
+            }
+        } elseif ($transactionStatus == 'settlement') {
+            return 'paid';
+        } elseif ($transactionStatus == 'pending') {
+            return 'pending';
+        } elseif ($transactionStatus == 'deny') {
+            return 'failed';
+        } elseif ($transactionStatus == 'expire') {
+            return 'expired';
+        } elseif ($transactionStatus == 'cancel') {
+            return 'canceled';
+        }
+        return 'unknown';
     }
 }
