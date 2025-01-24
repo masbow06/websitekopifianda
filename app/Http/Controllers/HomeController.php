@@ -7,12 +7,14 @@ use App\Models\Produk;
 
 class HomeController extends Controller
 {
-    public function view() {
+    public function view($snapToken = null) {
         $menu = Menu::all();
         $produk = Produk::all();
+        
         return view('home', [
             'menus' => $menu,
-            "produks" => $produk
+            "produks" => $produk,
+            "snap_token" => $snapToken
         ]);
     }
 

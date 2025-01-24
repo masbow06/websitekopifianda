@@ -1,181 +1,142 @@
-document.addEventListener('alpine:init', () => {
+// Cart Functionality
+const ID_CART_PRODUKID = `cart-produk-`;
+const ID_QUANTITY_PRODUK = `quantity-produk-`;
+const ID_TOTAL_HARGA_PRODUK = `total-harga-produk-`;
 
-    Alpine.data('products', () => ({
-        items: [
-            { id: 1, name: 'Robusta Brazil', img: '1.jpg', price: 20000 },
-            { id: 2, name: 'Arabica', img: '2.jpg', price: 30000 },
-            { id: 3, name: 'Gayo', img: '3.jpg', price: 40000 },
-            { id: 4, name: 'Suliki', img: '4.jpg', price: 50000 },
-            { id: 5, name: 'Kayu Aro', img: '5.jpg', price: 55000 },
-        ],
+document.addEventListener('DOMContentLoaded', () => {
+    const checkoutButton = document.querySelector('.checkout-button');
+    checkoutButton.disabled = true; // Start with the button disabled
 
-    }));
+    const form = document.querySelector('#checkoutForm');
 
-    Alpine.store('cart', {
-        items: [],
-        total: 0,
-        quantity: 0,
-        add(newItem) {
-            //cek apakah ada barang yang sama di cart
-            const cartItem = this.items.find((item) => item.id === newItem.id);
+    // Function to build JSON from cart items
+    function buildJson() {
+        const cartItems = [];
+        const itemElements = document.querySelectorAll('#item-list .cart-item');
 
-            //jika belim ada / cart kosong
-
-            if (!cartItem) {
-
-                this.items.push({ ...newItem, quantity: 1, total: newItem.price });
-                this.quantity++;
-                this.total += newItem.price;
-
-            } else {
-                //jika barang sudah ada, cek apakah barang sudah ada atau sama dengan di cart
-                this.items = this.items.map((item) => {
-                    //jika barang berbeda
-                    if (item.id !== newItem.id) {
-                        return item;
-                    } else {
-                        //jika barang sudah ada, tambah quantity dan subtotalnya
-                        item.quantity++;
-                        item.total = item.price * item.quantity;
-                        this.quantity++;
-                        this.total += item.price;
-                        return item;
-                    }
-                })
-            }
-        },
-
-        remove(id) {
-            // Ambil item yang mau di-remove berdasarkan id
-            const cartItem = this.items.find((item) => item.id === id);
-
-            // Jika item lebih dari satu
-            if (cartItem.quantity > 1) {
-                // Kurangi quantity item tersebut
-                this.items = this.items.map((item) => {
-                    if (item.id !== id) {
-                        return item;
-                    } else {
-                        item.quantity--;
-                        item.total = item.price * item.quantity;
-                        this.quantity--;
-                        this.total -= item.price;
-                        return item;
-                    }
-                });
-            } else if (cartItem.quantity === 1) {
-                // Jika quantity item hanya satu, hapus item dari keranjang
-                this.items = this.items.filter((item) => item.id !== id);
-                this.quantity--;
-                this.total -= cartItem.price;
-            }
-        }
-
-    });
-
-});
-
-const checkoutButton = document.querySelector('.checkout-button');
-checkoutButton.disabled = true; // Mulai dengan tombol dinonaktifkan
-
-// Validasi
-const form = document.querySelector('#checkoutForm');
-form.addEventListener('keyup', function () {
-    let allFilled = true;
-
-    for (let i = 0; i < form.elements.length; i++) {
-        if (form.elements[i].type !== "submit" && form.elements[i].value.length === 0) {
-            allFilled = false;
-            break;
-        }
-    }
-
-    if (allFilled) {
-        checkoutButton.disabled = false;
-        checkoutButton.classList.remove('disabled');
-    } else {
-        checkoutButton.disabled = true;
-        checkoutButton.classList.add('disabled');
-    }
-});
-
-// kirimd ata ketika checkout di klik
-
-// checkoutButton.addEventListener('click', function (e) {
-// e.preventDefault(); // Mencegah form melakukan submit default
-
-//     const formData = new FormData(form); // Mengambil data form
-//     const data = new URLSearchParams(formData); // Mengonversi FormData menjadi URLSearchParams
-//     const objData = Object.fromEntries(data); // Mengonversi URLSearchParams menjadi objek
-
-//     console.log(objData); // Menampilkan objek data di console
-// });
-
-checkoutButton.addEventListener('click', async function (e) {
-    e.preventDefault();
-    const formData = new FormData(form);
-    const data = new URLSearchParams(formData);
-    const objData = Object.fromEntries(data);
-    console.log(objData);
-
-
-    //mintak transaksi token menggunakan ajax/fetch
-    try {
-
-        const response = await fetch('php/placeOrder.php', {
-            method: 'POST',
-            body: data,
+        itemElements.forEach((itemElement) => {
+            const id = itemElement.dataset.id;
+            const quantity = Number(itemElement.querySelector('.item-quantity').textContent);
+            cartItems.push({ id, quantity });
         });
 
-        const token = await response.text();
-        //console.log(token);
-        window.snap.pay(token);
-
-    } catch (err) {
-        console.log(err.formatMessage)
+        return cartItems;
     }
 
+    // Validation Function
+    const validateForm = function () {
+        let allFilled = true;
 
+        const json = buildJson();
+        form.elements['items'].value = JSON.stringify(json);
 
-    //const message = formatMessage(objData);
-    //window.open('http://wa.me//6282258537227?text=' + encodeURIComponent(message));
+        for (let i = 0; i < form.elements.length; i++) {
+            if (
+                form.elements[i].type !== "submit" &&
+                form.elements[i].type !== "button" &&
+                form.elements[i].value.trim().length === 0
+            ) {
+                allFilled = false;
+                break;
+            }
+        }
+
+        if (allFilled && json.length > 0) {
+            checkoutButton.disabled = false;
+            checkoutButton.classList.remove('disabled');
+        } else {
+            checkoutButton.disabled = true;
+            checkoutButton.classList.add('disabled');
+        }
+    };
+    form.addEventListener('keyup', validateForm);
+    form.addEventListener('mouseup', validateForm);
+
+    // Utility Function to Format Number to Rupiah
+    const rupiah = (number) => {
+        return new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0,
+        }).format(number);
+    };
+
+    window.addToCart = (id, name, price, image) => {
+        const cart = document.querySelector("#item-list");
+        const cartItem = document.querySelector(`#${ID_CART_PRODUKID}${id}`);
+
+        // If the product is not in the cart
+        if (cartItem == null) {
+            cart.innerHTML += buildItemCart(id, name, price, image);
+            changeCartTotalQuantity(1);
+            changeCartTotalPrice(price);
+        } else { // If the product is already in the cart
+            increaseQuantity(id, price);
+        }
+
+        validateForm(); // Validate form after adding to cart
+    };
+
+    const changeCartTotalQuantity = (delta) => {
+        const totalQuantity = document.querySelector('.quantity-badge');
+        totalQuantity.textContent = Number(totalQuantity.textContent) + delta;
+    };
+
+    const changeCartTotalPrice = (price) => {
+        const cartTotalPrice = document.querySelector('#cartTotalPrice');
+        cartTotalPrice.textContent = Number(cartTotalPrice.textContent) + price;
+    };
+
+    window.increaseQuantity = (id, price) => {
+        const cartItem = document.querySelector(`#${ID_CART_PRODUKID}${id}`);
+        const quantity = cartItem.querySelector(`.item-quantity`);
+        const totalPrice = cartItem.querySelector(`.item-total`);
+
+        quantity.textContent = Number(quantity.textContent) + 1;
+        totalPrice.textContent = rupiah(price * Number(quantity.textContent));
+        changeCartTotalQuantity(1);
+        changeCartTotalPrice(price);
+
+        validateForm(); // Validate form after increasing quantity
+    };
+
+    window.decreaseQuantity = (id, price) => {
+        const cartItem = document.querySelector(`#${ID_CART_PRODUKID}${id}`);
+        const quantity = cartItem.querySelector(`.item-quantity`);
+        const totalPrice = cartItem.querySelector(`.item-total`);
+
+        if (Number(quantity.textContent) === 1) {
+            cartItem.remove();
+            changeCartTotalQuantity(-1);
+            changeCartTotalPrice(-price);
+        } else {
+            quantity.textContent = Number(quantity.textContent) - 1;
+            totalPrice.textContent = rupiah(price * Number(quantity.textContent));
+            changeCartTotalQuantity(-1);
+            changeCartTotalPrice(-price);
+        }
+
+        validateForm(); // Validate form after decreasing quantity
+    };
+
+    const buildItemCart = (id, name, price, image) => {
+        const idCartProdukId = `${ID_CART_PRODUKID}${id}`;
+        const idQuantityProduk = `${ID_QUANTITY_PRODUK}${id}`;
+        const idTotalHargaProduk = `${ID_TOTAL_HARGA_PRODUK}${id}`;
+
+        return `
+            <div class="cart-item" id="${idCartProdukId}" data-id="${id}">
+                <img src="${image}" alt="${name}">
+                <div class="item-detail">
+                    <h3 class="item-name">${name}</h3>
+                    <div class="item-price">
+                        <span>${rupiah(price)}</span> &times;
+                        <button type="button" onclick="decreaseQuantity(${id}, ${price})">&minus;</button>
+                        <span class="item-quantity">1</span>
+                        <button type="button" onclick="increaseQuantity(${id}, ${price})">&plus;</button> =
+                        <span class="item-total">${rupiah(price)}</span>
+                    </div>
+                </div>
+            </div>`;
+    };
 });
-
-//format pesan whatsapp
-
-const formatMessage = (obj) => {
-    return `Data Customer
-Nama: ${obj.name}
-Email: ${obj.email}
-No HP: ${obj.phone}
-Data Pesanan 
-${JSON.parse(obj.items).map((item) => `${item.name} (${item.quantity} x ${rupiah(item.total)})`).join('\n')}
-TOTAL: ${rupiah(obj.total)}
-Terima Kasih;
-`;
-}
-
-// const formatMessage = (obj) => {
-//     return `Data Customer
-//     Nama: ${obj.name}
-//     Email: ${obj.email}
-//     No HP: ${obj.phone}
-//     Data Pesanan 
-//     ${JSON.parse(obj.items).map((item) => `${item.name} (${item.quantity} x ${rupiah(item.total)}) \n `)}
-//     TOTAL: ${rupiah(obj.total)}
-//     Terima Kasih;
-//     `;
-// }
-
-
-//konversi ke rupiah
-
-const rupiah = (number) => {
-    return new Intl.NumberFormat('id-ID', {
-        style: 'currency',
-        currency: 'IDR',
-        minimumFractionDigits: 0,
-    }).format(number);
-};
-
-

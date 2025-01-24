@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('produk_id')->constrained();
             $table->integer('jumlah');
             $table->double('totalbayar');
-            $table->date('paymentstat');
+            $table->char('paymentstat');
             $table->timestamps();
         });
     }
