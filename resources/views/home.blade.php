@@ -21,10 +21,6 @@
     <!-- My Style  -->
     <link rel="stylesheet" href="{{asset('css/home.style.css')}}">
 
-    <!-- alphine JS -->
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js" defer></script>
-
-
     <!-- app -->
     <script src="{{asset('js/app.js')}}" defer></script>
 
@@ -40,7 +36,6 @@
     <nav class="navbar" x-data>
         <a href="#" class="navbar-logo">Kenangan<span>Senja</span></a>
 
-
         <div class="navbar-nav">
             <a href="#home">Home</a>
             <a href="#about">Tentang Kami</a>
@@ -53,7 +48,7 @@
             <a href="#" id="search-button"><i data-feather="search"></i></a>
             <a href="#" id="shopping-cart-button">
                 <i data-feather="shopping-cart"></i>
-                <span class="quantity-badge" x-show="$store.cart.quantity" x-text="$store.cart.quantity"></span>
+                <span class="quantity-badge">0</span>
             </a>
             <a href="#" id="hamburger-menu"><i data-feather="menu"></i></a>
         </div>
@@ -69,32 +64,13 @@
 
         <!-- shopping cart start -->
         <div class="shoppingcart">
-            <template x-for="(item, index) in $store.cart.items" x-keys="index">
-                <div class="cart-item">
-                    <img :src="item.image" :alt="item.name">
-                    <div class="item-detail">
-                        <h3 x-text="item.name"></h3>
-                        <div class="item-price">
-                            <span x-text="rupiah(item.harga)"></span> &times;
-                            <button id="remove" @click="$store.cart.remove(item.id)">&minus;</button>
-                            <span x-text="item.quantity"></span>
-                            <button id="add" @click="$store.cart.add(item)">&plus;</button>&equals;
-                            <span x-text="rupiah(item.total)"></span>
-                        </div>
-
-                    </div>
-                </div>
-            </template>
-            <h4 x-show="!$store.cart.items.length" style="margin-top: 1rem;">cart is empty</h4>
-            <h4 x-show="$store.cart.items.length > 0">Total : <span x-text="rupiah($store.cart.total)"></span></h4>
-
-            <div class="form-container" x-show="$store.cart.items.length">
-                <form action="" id="checkoutForm">
+            <h4 style="margin-top: 1rem;">cart is empty</h4>
+            <h4>Total : <span id="cartTotalPrice"></span></h4>
+            <div class="form-container">
+                <form method="POST" action="/order" id="checkoutForm">
+                    @csrf
+                    <div id="item-list"></div>
                     <h5>Customer Detail</h5>
-
-                    <input type="hidden" name="items" x-model="JSON.stringify($store.cart.items)">
-                    <input type="hidden" name="total" x-model="$store.cart.total">
-
                     <label for="name">
                         <span>Name</span>
                         <input type="text" name="name" id="name">
@@ -107,6 +83,11 @@
                         <span>Phone</span>
                         <input type="number" name="phone" id="phone" autocomplete="off">
                     </label>
+                    <label for="address">
+                        <span>Address</span>
+                        <input type="text" name="address" id="address">
+                    </label>
+                    <input type="hidden" name="items" id="cart-items" value="[]">
                     <button class="checkout-button disabled" type="submit" id="checkout-button"
                         value="">checkout</button>
                 </form>
@@ -157,7 +138,7 @@
         <div class="row">
             @foreach ($menus as $menu)
             <div class="menu-card">
-                <img width="50" src="{{$menu->image}}" alt="{{$menu->namamenu}}" class="menu-card-image">
+                <img width="200" height="200" src="{{$menu->image}}" alt="{{$menu->namamenu}}" class="menu-card-image">
                 <h3 class="menu-card-tittle">{{$menu->namamenu}}</h3>
                 <p class="menu-price">{{ (new NumberFormatter('id_ID', NumberFormatter::CURRENCY))->formatCurrency($menu->harga, "IDR") }}</p>
             </div>
@@ -173,10 +154,10 @@
         <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ullam, ad?</p>
 
         <div class="row">
-            <template x-for="(item, index) in items" x-key="index">
+                @foreach ( $produks as $produk )
                 <div class="product-card">
                     <div class="product-icons">
-                        <a href="#" @click.prevent="$store.cart.add(item)">
+                        <a onclick="addToCart({{$produk->id}}, '{{$produk->namaproduk}}', {{$produk->harga}}, '{{$produk->image}}')">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 style="fill: rgb(255, 255, 255);transform: msFilter">
                                 <path
@@ -191,10 +172,10 @@
                             </svg></a>
                     </div>
                     <div class="product-image">
-                        <img :src="item.image" :alt="item.namaproduk">
+                        <img src="{{$produk->image}}" alt="{{$produk->namaproduk}}">
                     </div>
                     <div class="product-conten">
-                        <h3 x-text="item.namaproduk"></h3>
+                        <h3 >{{$produk->namaproduk}}</h3>
                         <div class="product-star">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 style="fill: #513c28 ;transform: msFilter">
@@ -227,10 +208,10 @@
                                 </path>
                             </svg>
                         </div>
-                        <div class="product-price"><span x-text="rupiah(item.harga)"></span></div>
+                        <div class="product-price"><span>{{$produk->harga}}</span></div>
                     </div>
                 </div>
-            </template>
+                @endforeach
         </div>
     </section>
     <!-- produk section end -->
@@ -319,10 +300,16 @@
 
     <!-- Feather Icon  -->
     <script>
+        console.log('{{$snap_token}}')
         feather.replace();
     </script>
 
     <script src="js/script.js"></script>
+    @if ($snap_token)
+    <script>
+        window.snap.pay('{{ $snap_token }}');
+    </script>
+    @endif
 </body>
 
 </html>

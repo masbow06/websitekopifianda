@@ -123,4 +123,9 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+
+    // Providers
+    // 'providers' => [
+    //     App\Providers\MidtransServiceProvider::class,
+    // ],
 ];

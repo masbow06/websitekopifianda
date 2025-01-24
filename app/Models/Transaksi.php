@@ -3,13 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\HasBuilder;
 use Illuminate\Database\Eloquent\Model;
 
 class Transaksi extends Model
 {
     use HasFactory;
+    use HasBuilder;
 
     protected $fillable = [
+        'trx_code',
         'tanggalpemesanan',
         'codemidtrans',
         'produk_id',
