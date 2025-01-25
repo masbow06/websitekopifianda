@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('mouseup', validateForm);
 
     // Utility Function to Format Number to Rupiah
-    const rupiah = (number) => {
+    window.rupiah = (number) => {
         return new Intl.NumberFormat('id-ID', {
             style: 'currency',
             currency: 'IDR',
