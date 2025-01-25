@@ -410,12 +410,17 @@ body {
 
 .menu .row .menu-card {
     text-align: center;
+    margin-right: 2rem;
+    margin-left: 2rem;
     padding-bottom: 4rem;
 }
 
 .menu .row .menu-card img {
     border-radius: 50%;
-    width: 80%;
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    background-color: #010101;
 }
 
 .menu .row .menu-card .menu-card-tittle {
