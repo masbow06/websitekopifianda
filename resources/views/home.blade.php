@@ -138,7 +138,7 @@
         <div class="row">
             @foreach ($menus as $menu)
             <div class="menu-card">
-                <img width="200" height="200" src="{{$menu->image}}" alt="{{$menu->namamenu}}" class="menu-card-image">
+                <img width="200" height="200" src="{{Storage::url($menu->image)}}" alt="{{$menu->namamenu}}" class="menu-card-image">
                 <h3 class="menu-card-tittle">{{$menu->namamenu}}</h3>
                 <p class="menu-price">{{ (new NumberFormatter('id_ID', NumberFormatter::CURRENCY))->formatCurrency($menu->harga, "IDR") }}</p>
             </div>
@@ -172,7 +172,7 @@
                             </svg></a>
                     </div>
                     <div class="product-image">
-                        <img src="{{$produk->image}}" alt="{{$produk->namaproduk}}">
+                        <img src="{{Storage::url($produk->image)}}" alt="{{$produk->namaproduk}}">
                     </div>
                     <div class="product-conten">
                         <h3 >{{$produk->namaproduk}}</h3>
@@ -208,7 +208,7 @@
                                 </path>
                             </svg>
                         </div>
-                        <div class="product-price"><span>{{$produk->harga}}</span></div>
+                        <div class="product-price"><span>{{(new NumberFormatter('id_ID', NumberFormatter::CURRENCY))->formatCurrency($produk->harga, "IDR")}}</span></div>
                     </div>
                 </div>
                 @endforeach
