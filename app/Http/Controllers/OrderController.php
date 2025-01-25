@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\OrderRequest;
 use Midtrans\Notification;
-use Midtrans\CoreApi;
 use App\Models\Transaksi;
 use App\Models\Produk;
 use App\Models\Menu;
 use App\Services\MidtransService;
+use App\Services\WhatsappService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -36,9 +36,19 @@ class OrderController extends Controller
             $trx->jumlah = $item['quantity'];
             $trx->totalbayar = $item['total'];
             $trx->paymentstat = 'pending';
+            $trx->namapemesan = $request->name;
+            $trx->phone = $request->phone;
+            $trx->alamat = $request->address;
+            $trx->email = $request->email;
             $trx->save();
         }
         Transaksi::insert($listOfProduk);
+
+        $message = WhatsappService::buildCustomerMessageOrderCreated(
+            $paymentParam['transaction_details']['order_id'],
+            $request->name,
+            $paymentParam['transaction_details']['gross_amount']);
+        WhatsappService::sendMessage($request->phone,$message);
 
         $menu = Menu::all();
         $produk = Produk::all();
@@ -62,11 +72,24 @@ class OrderController extends Controller
         if ($transactions->isEmpty()) {
             return response(['message' => "Transaction $orderId not found"], 404);
         }
-        Log::info(json_encode($notif));
-        Log::info(json_encode($transactions));
-
 
         $status = $this->getTrxStatus($transactionStatus, $fraudStatus);
+        if ($status == "paid") {
+            $messageCustomer = WhatsappService::buildCustomerMessageOrderPaid($orderId, $transactions->first()->namapemesan);
+            $messageAdminAndOwner = WhatsappService::buildOwnerAndAdminMessageOrderCreated(
+                $orderId,
+                $transactions->first()->namapemesan,
+                $transactions->first()->phone,
+                $transactions->first()->alamat,
+                $transactions->sum('totalbayar'),
+                $transactions->map(function($trx) {
+                    return [$trx->produk->namaproduk, $trx->jumlah];
+                })
+            );
+            WhatsappService::sendMessage($transactions->first()->phone, $messageCustomer);
+            WhatsappService::sendToAdmin($messageAdminAndOwner);
+            WhatsappService::sendToOwner($messageAdminAndOwner);
+        }
         foreach ($transactions as $trx) {
             $trx->paymentstat = $status;
             $trx->save();

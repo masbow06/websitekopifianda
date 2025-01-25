@@ -139,4 +139,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>`;
     };
+
+    
+    const phoneInput = document.getElementById('phone');
+    phoneInput.addEventListener('input', function () {
+        const value = phoneInput.value;
+        if (value.length === 1 && value === '0') {
+            phoneInput.value = '';
+        } else if(value.startsWith('0')) {
+            phoneInput.value = value.substring(1);
+        }
+    });
 });

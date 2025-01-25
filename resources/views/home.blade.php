@@ -64,7 +64,7 @@
 
         <!-- shopping cart start -->
         <div class="shoppingcart">
-            <h4 style="margin-top: 1rem;">cart is empty</h4>
+            <h4 style="margin-top: 1rem;">Keranjang Belanja</h4>
             <h4>Total : <span id="cartTotalPrice"></span></h4>
             <div class="form-container">
                 <form method="POST" action="/order" id="checkoutForm">
@@ -73,19 +73,19 @@
                     <h5>Customer Detail</h5>
                     <label for="name">
                         <span>Name</span>
-                        <input type="text" name="name" id="name">
+                        <input type="text" name="name" placeholder="Nama pemesan" id="name">
                     </label>
                     <label for="email">
                         <span>Email</span>
-                        <input type="email" name="email" id="email">
+                        <input type="email" name="email" placeholder="Email pemesan" id="email">
                     </label>
                     <label for="phone">
                         <span>Phone</span>
-                        <input type="number" name="phone" id="phone" autocomplete="off">
+                        <input type="number" name="phone" id="phone" placeholder="Nomor pemesan | Tanpa 0 diawal nomor" autocomplete="off">
                     </label>
                     <label for="address">
                         <span>Address</span>
-                        <input type="text" name="address" id="address">
+                        <input type="text" name="address" placeholder="Alamat pemesan" id="address">
                     </label>
                     <input type="hidden" name="items" id="cart-items" value="[]">
                     <button class="checkout-button disabled" type="submit" id="checkout-button"

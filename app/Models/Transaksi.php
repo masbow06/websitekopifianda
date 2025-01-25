@@ -19,6 +19,10 @@ class Transaksi extends Model
         'jumlah',
         'totalbayar',
         'paymentstat',  
+        'namapemesan',
+        'phone',
+        'alamat',
+        'email'
     ];
 
     /**
