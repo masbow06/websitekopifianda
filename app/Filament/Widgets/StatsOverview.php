@@ -11,13 +11,13 @@ class StatsOverview extends BaseWidget
     protected function getStats(): array
     {
         // Menghitung total pemasukan
-        $totalbayar = Transaksi::where('paymentstat', 'completed')->sum('totalbayar');
+        $totalbayar = Transaksi::where('paymentstat', 'paid')->sum('totalbayar');
 
         // Contoh data statis atau Anda bisa mengganti dengan query dinamis sesuai kebutuhan
         $totalItemTerjual = Transaksi::sum('jumlah');
-        $totalBerhasil = Transaksi::where('paymentstat', 'completed')->count();
+        $totalBerhasil = Transaksi::where('paymentstat', 'paid')->count();
         $totalPending = Transaksi::where('paymentstat', 'pending')->count();
-        $totalGagal = Transaksi::where('paymentstat', 'failed')->count();
+        $totalGagal = Transaksi::whereNotIn('paymentstat', ['paid','pending'])->count();
         $produkTerjual = Transaksi::distinct('produk_id')->count('produk_id');
 
         return [

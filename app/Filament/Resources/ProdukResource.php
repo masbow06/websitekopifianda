@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ProdukResource extends Resource
@@ -46,7 +47,7 @@ class ProdukResource extends Resource
                 ->required(),
                 Forms\Components\select::make('tingkatroasting')
                 ->options([
-                    'medium'=>'Light',
+                    'light'=>'Light',
                     'medium'=>'Medium',
                     'dark'=>'Dark'
                 ])
@@ -72,7 +73,8 @@ class ProdukResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('image'),
+                // Tables\Columns\ImageColumn::make('image')->url(fn($record) => Storage::url($record->image)),
+                Tables\Columns\ImageColumn::make('image')->disk('public'),
                 Tables\Columns\TextColumn::make('namaproduk'),
                 Tables\Columns\TextColumn::make('slug'), 
                 Tables\Columns\TextColumn::make('jeniskopi'), 

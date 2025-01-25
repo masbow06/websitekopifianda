@@ -13,6 +13,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class MenuResource extends Resource
 {
@@ -49,7 +50,7 @@ class MenuResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('image'),
+                Tables\Columns\ImageColumn::make('image')->url(fn($record) => Storage::url($record->image)),
                 Tables\Columns\TextColumn::make('namamenu'),
                 Tables\Columns\TextColumn::make('slug'), 
                 Tables\Columns\TextColumn::make('harga'), 

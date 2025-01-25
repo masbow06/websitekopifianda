@@ -37,7 +37,7 @@ class TransaksiResource extends Resource
                 ->required(),
                 Forms\Components\TextInput::make('email')
                 ->required(),
-                Forms\Components\TextInput::make('Nohp')
+                Forms\Components\TextInput::make('phone')
                 ->numeric()
                 ->required(),
                 Forms\Components\Select::make('paymentstat')
@@ -54,14 +54,13 @@ class TransaksiResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('tanggalpemesanan'),
-                Tables\Columns\TextColumn::make('code'), 
+                Tables\Columns\TextColumn::make('trx_code'), 
                 Tables\Columns\TextColumn::make('produk_id'), 
-                Tables\Columns\TextColumn::make('nama'), 
+                Tables\Columns\TextColumn::make('namapemesan'), 
                 Tables\Columns\TextColumn::make('email'), 
-                Tables\Columns\TextColumn::make('Nohp'), 
-                Tables\Columns\TextColumn::make('harga'), 
+                Tables\Columns\TextColumn::make('phone'), 
                 Tables\Columns\TextColumn::make('paymentstat'), 
-                Tables\Columns\TextColumn::make('totalharga'), 
+                Tables\Columns\TextColumn::make('totalbayar'), 
             ])
             ->filters([
                 //
