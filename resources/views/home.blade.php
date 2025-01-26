@@ -45,22 +45,12 @@
         </div>
 
         <div class="navbar-exstra">
-            <a href="#" id="search-button"><i data-feather="search"></i></a>
             <a href="#" id="shopping-cart-button">
                 <i data-feather="shopping-cart"></i>
                 <span class="quantity-badge">0</span>
             </a>
             <a href="#" id="hamburger-menu"><i data-feather="menu"></i></a>
         </div>
-
-        <!-- Search form start -->
-
-        <div class="search-form">
-            <input type="search-button" id="search-box" placeholder="search here...">
-            <label for="search-box"><i data-feather="search"></i></label>
-        </div>
-
-        <!-- Search form end -->
 
         <!-- shopping cart start -->
         <div class="shoppingcart">
@@ -226,20 +216,11 @@
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63836.58141976395!2d100.59155271614354!3d-0.22940955764657844!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2fd54c3c6f83a013%3A0x4039d80b2210dd0!2sPayakumbuh%2C%20Kota%20Payakumbuh%2C%20Sumatera%20Barat!5e0!3m2!1sid!2sid!4v1701974034865!5m2!1sid!2sid" " allowfullscreen="" loading="
                 lazy" referrerpolicy="no-referrer-when-downgrade" class="map"></iframe>
 
-            <form action="">
-                <div class="input-group">
-                    <i data-feather="user"></i>
-                    <input type="text" placeholder="nama">
-                </div>
-                <div class="input-group">
-                    <i data-feather="mail"></i>
-                    <input type="text" placeholder="email">
-                </div>
-                <div class="input-group">
-                    <i data-feather="phone"></i>
-                    <input type="text" placeholder="no Hp">
-                </div>
-                <button type="submit" class="btn">Kirim Pesan</button>
+            <form >
+                <p>Jl. Tan Malaka No.146, Napar, Kec. Payakumbuh Utara, Kota Payakumbuh, Sumatera Barat 26219</p>
+                <a href="https://wa.me/6282258537227" target="_blank" class="btn">
+                    Hubungi kami
+                </a> 
             </form>
 
         </div>
@@ -314,7 +295,6 @@
             const modalAddToCart = document.querySelector('#modal-add-to-cart');
             
             const addTocartEvent = () => {
-                console.log('clicked')
                 addToCart(id, name, price, image);
                 itemDetailModal.style.display = 'none';
                 modalAddToCart.removeEventListener('click', addTocartEvent);
