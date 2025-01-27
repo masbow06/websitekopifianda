@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kopi Kenangan Senja</title>
+    <title>Cafe Fianda Payakumbuh</title>
 
 
     <!-- fonts -->
@@ -34,7 +34,7 @@
 
     <!-- navbar start -->
     <nav class="navbar" x-data>
-        <a href="#" class="navbar-logo">Kenangan<span>Senja</span></a>
+        <a href="#" class="navbar-logo">Fianda<span>Cafe</span></a>
 
         <div class="navbar-nav">
             <a href="#home">Home</a>
@@ -93,9 +93,7 @@
     <section class="hero" id="home">
         <main class="content">
             <h1>Mari Nikmati Secangkir <span> Kopi </span></h1>
-            <p>Lorem ipsum dolor, sit amet
-                consectetur adipisicing elit.
-                Ea, itaque!</p>
+            <p>Nikamti pagi mu dengan segelas kopi bersama kami</p>
         </main>
     </section>
     <!-- Hero Section end -->
@@ -111,10 +109,8 @@
             </div>
             <div class="content">
                 <h3>Kenapa Memilih Kopi Kami</h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus nesciunt facilis quis quam! A,
-                    veritatis?</p>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione corrupti adipisci, quo quia eius
-                    vero dignissimos? Accusantium, blanditiis facilis. Suscipit? </p>
+                <p>Kami menyediakan minuman dengan rasa yang unik dan menarik</p>
+                <p>Fianda menyediakan biji-biji kopi terbaik khususnya biji kopi yang berada diSumatera barat</p>
             </div>
         </div>
     </section>
@@ -124,7 +120,7 @@
     <!-- menu section start -->
     <section id="menu" class="menu">
         <h2><span>Menu</span> Kami</h2>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus mollitia recusandae aliquam a illum. </p>
+        <p>Menu yang kami sediakan</p>
         <div class="row">
             @foreach ($menus as $menu)
             <div class="menu-card">
@@ -141,8 +137,9 @@
     <!-- produk section start -->
     <section class="products" id="products" x-data="products">
         <h2><span>Produk Unggulan</span>Kami</h2>
-        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ullam, ad?</p>
-
+        <center>
+        <p>Ini adalah biji kopi unggulan kami</p>
+         </center>
         <div class="row">
                 @foreach ( $produks as $produk )
                 <div class="product-card">
@@ -166,7 +163,7 @@
                     </div>
                     <div class="product-conten">
                         <h3 >{{$produk->namaproduk}}</h3>
-                        <div class="product-star">
+                        {{-- <div class="product-star">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 style="fill: #513c28 ;transform: msFilter">
                                 <path
@@ -197,7 +194,7 @@
                                     d="M21.947 9.179a1.001 1.001 0 0 0-.868-.676l-5.701-.453-2.467-5.461a.998.998 0 0 0-1.822-.001L8.622 8.05l-5.701.453a1 1 0 0 0-.619 1.713l4.213 4.107-1.49 6.452a1 1 0 0 0 1.53 1.057L12 18.202l5.445 3.63a1.001 1.001 0 0 0 1.517-1.106l-1.829-6.4 4.536-4.082c.297-.268.406-.686.278-1.065z">
                                 </path>
                             </svg>
-                        </div>
+                        </div> --}}
                         <div class="product-price"><span>{{(new NumberFormatter('id_ID', NumberFormatter::CURRENCY))->formatCurrency($produk->harga, "IDR")}}</span></div>
                     </div>
                 </div>
@@ -209,7 +206,7 @@
     <!-- contact section start -->
     <section id="contact" class="contact">
         <h2><span>kontak</span> Kami</h2>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa, dolorem!</p>
+        <p>Jika ada pertanyaan serta lokasi, klik dan lihat kami </p>
 
         <div class="row">
             <iframe
@@ -245,7 +242,7 @@
         </div>
 
         <div class="credit">
-            <p>Created by <a href="">Aditia Prabowo</a>. | &copy 2023. </p>
+            <p>Created by <a href="">Aditia Prabowo</a>. | &copy 2024. </p>
         </div>
     </footer>
     <!-- foother end -->
@@ -263,13 +260,13 @@
                         obcaecati
                         ullam maiores minima quos perspiciatis similique itaque, esse rerum eius repellendus
                         voluptatibus!</p>
-                    <div class="product-stars">
+                    {{-- <div class="product-stars">
                         <i data-feather="star" class="star-full"></i>
                         <i data-feather="star" class="star-full"></i>
                         <i data-feather="star" class="star-full"></i>
                         <i data-feather="star" class="star-full"></i>
                         <i data-feather="star"></i>
-                    </div>
+                    </div> --}}
                     <div class="product-price"><span id="modal-product-price">IDR 55K</span></div>
                     <a id="modal-add-to-cart"><i data-feather="shopping-cart"></i> <span>Add to cart</span></a>
                 </div>
@@ -279,7 +276,7 @@
 
     <!-- Modal Box Item Detai end-->
 
-    <!-- Feather Icon  -->
+
     <script>
         feather.replace();
     </script>

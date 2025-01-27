@@ -179,7 +179,7 @@ body {
 }
 
 .shoppingcart .item-price {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
 }
 
 .shoppingcart .cart-item #add,
@@ -197,7 +197,7 @@ body {
 
 .shoppingcart h4 {
     font-size: 1.6rem;
-    margin-top: -1rem;
+    margin-top: 0rem;
     text-align: center;
 }
 
@@ -340,11 +340,11 @@ body {
 
 .about h2,
 .menu h2,
-.products,
+.products h2,
 .contact h2 {
     text-align: center;
     font-size: 2.0rem;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
 }
 
 .about h2 span,
@@ -395,7 +395,7 @@ body {
     max-width: 30rem;
     margin: auto;
     font-weight: 100;
-    line-height: 1.6;
+    line-height: 1.6rem;
 }
 
 /* menu espresso */
@@ -638,7 +638,7 @@ footer .credit a {
 }
 
 .modal-content img {
-    height: 20rem;
+    height: 43rem;
     margin-right: 1.5rem;
     margin-bottom: 1.5rem;
 }

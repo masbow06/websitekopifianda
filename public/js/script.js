@@ -8,12 +8,16 @@ document.querySelector('#hamburger-menu').onclick = () => {
 // toggle class active search form
 const searchForm = document.querySelector('.search-form');
 const searchBox = document.querySelector('#search-box');
-document.querySelector('#search-button').onclick = (e) => {
-    searchForm.classList.toggle('active');
-    searchBox.focus();
-    e.preventDefault();
+const searchButton = document.querySelector('#search-button');
 
-};
+// Pastikan elemen-elemen yang diperlukan ditemukan
+if (searchForm && searchBox && searchButton) {
+    searchButton.addEventListener('click', (e) => {
+        e.preventDefault(); // Mencegah perilaku default tombol
+        searchForm.classList.toggle('active'); // Toggle class 'active' pada form
+        searchBox.focus(); // Fokus ke kotak pencarian
+    });
+}
 
 //toggle class active shopping card
 const shoppingCart = document.querySelector('.shoppingcart');
@@ -24,24 +28,47 @@ document.querySelector('#shopping-cart-button').onclick = (e) => {
 
 
 // klick diluar elemen
+// Seleksi elemen dengan querySelector
 const hm = document.querySelector('#hamburger-menu');
 const sb = document.querySelector('#search-button');
-const sc = document.querySelector('#shopping-cart-button')
+const sc = document.querySelector('#shopping-cart-button');
 
+// Tambahkan event listener pada dokumen
 document.addEventListener('click', function (e) {
-    if (!hm.contains(e.target) && !navbarNav.contains(e.target)) {
-        navbarNav.classList.remove('active');
+    // Pastikan elemen 'hm' dan 'navbarNav' ditemukan sebelum digunakan
+    if (hm && navbarNav && !hm.contains(e.target) && !navbarNav.contains(e.target)) {
+        navbarNav.classList.remove('active'); // Hapus class 'active' dari navbar
     }
 
-
-    if (!sb.contains(e.target) && !searchForm.contains(e.target)) {
-        searchForm.classList.remove('active');
+    // Pastikan elemen 'sb' dan 'searchForm' ditemukan sebelum digunakan
+    if (sb && searchForm && !sb.contains(e.target) && !searchForm.contains(e.target)) {
+        searchForm.classList.remove('active'); // Hapus class 'active' dari search form
     }
 
-    if (!sc.contains(e.target) && !shoppingCart.contains(e.target)) {
-        shoppingCart.classList.remove('active');
+    // Pastikan elemen 'sc' dan 'shoppingCart' ditemukan sebelum digunakan
+    if (sc && shoppingCart && !sc.contains(e.target) && !shoppingCart.contains(e.target)) {
+        shoppingCart.classList.remove('active'); // Hapus class 'active' dari shopping cart
     }
 });
+
+// const hm = document.querySelector('#hamburger-menu');
+// const sb = document.querySelector('#search-button');
+// const sc = document.querySelector('#shopping-cart-button')
+
+// document.addEventListener('click', function (e) {
+//     if (!hm.contains(e.target) && !navbarNav.contains(e.target)) {
+//         navbarNav.classList.remove('active');
+//     }
+
+
+//     if (!sb.contains(e.target) && !searchForm.contains(e.target)) {
+//         searchForm.classList.remove('active');
+//     }
+
+//     if (!sc.contains(e.target) && !shoppingCart.contains(e.target)) {
+//         shoppingCart.classList.remove('active');
+//     }
+// });
 
 // modal box
 const itemDetailModal = document.querySelector('#item-detail-modal');
