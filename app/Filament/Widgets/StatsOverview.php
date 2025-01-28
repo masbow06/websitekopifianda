@@ -17,11 +17,11 @@ class StatsOverview extends BaseWidget
         $totalbayar = Transaksi::where('paymentstat', 'paid')->sum('totalbayar');
 
         // Contoh data statis atau Anda bisa mengganti dengan query dinamis sesuai kebutuhan
-        $totalItemTerjual = Transaksi::where('created_at', '>=', $aWeekAgo->get('day') . '')->sum('jumlah');
-        $totalBerhasil = Transaksi::where('paymentstat', 'paid')->where('created_at', '>=', $aWeekAgo->get('day') . '')->count();
-        $totalPending = Transaksi::where('paymentstat', 'pending')->where('created_at', '>=', $aWeekAgo->get('day') . '')->count();
-        $totalGagal = Transaksi::whereNotIn('paymentstat', ['paid','pending'])->where('created_at', '>=', $aWeekAgo->get('day') . '')->count();
-        $produkTerjual = Transaksi::where('created_at', '>=', $aWeekAgo->get('day') . '')->distinct('produk_id')->count('produk_id');
+        $totalItemTerjual = Transaksi::where('created_at', '>=', $aWeekAgo)->sum('jumlah');
+        $totalBerhasil = Transaksi::where('paymentstat', 'paid')->where('created_at', '>=', $aWeekAgo)->count();
+        $totalPending = Transaksi::where('paymentstat', 'pending')->where('created_at', '>=', $aWeekAgo)->count();
+        $totalGagal = Transaksi::whereNotIn('paymentstat', ['paid','pending'])->where('created_at', '>=', $aWeekAgo)->count();
+        $produkTerjual = Transaksi::where('created_at', '>=', $aWeekAgo)->distinct('produk_id')->count('produk_id');
 
         return [
             Stat::make('Total Item Terjual', number_format($totalItemTerjual, 0, ',', '.')),
