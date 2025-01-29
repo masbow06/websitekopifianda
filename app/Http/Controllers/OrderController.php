@@ -115,15 +115,27 @@ class OrderController extends Controller
         });
 
         $currentTimeMilis = floor(microtime(true) * 1000);
+        $first_name = explode(" ",$request->name)[0] ?? "";
+        $last_name = explode(" ",$request->name)[1] ?? "";
         $transaction_detail = [
             'order_id' => "TRX-$currentTimeMilis",
             'gross_amount' => $products->sum('total')
         ];
-        $customer_detail = [
-            'name' => $request->name,
+        $address = [
+            'first_name' => $first_name,
+            'last_name' => $last_name,
             'email' => $request->email,
             'phone' => $request->phone,
-            'address' => $request->address
+            "address" => $request->address,
+            "country_code" => "IDN"
+        ];
+        $customer_detail = [
+            'first_name' => $first_name,
+            'last_name' => $last_name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'billing_address' => $address,
+            'shipping_address' => $address
         ];
 
         return [
