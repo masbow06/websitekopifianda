@@ -59,7 +59,7 @@
             <div class="form-container">
                 <form method="POST" action="/order" id="checkoutForm">
                     @csrf
-                    <div id="item-list"></div>
+                    <div style="height: 50%; overflow-y: auto;" id="item-list"></div>
                     <h5>Customer Detail</h5>
                     <label for="name">
                         <span>Name</span>
